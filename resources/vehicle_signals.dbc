@@ -1,0 +1,73 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_SGTYPE_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: Cluster Infotainment Engine
+
+BO_ 100 WheelSpeed: 8 Engine
+ SG_ Speed : 0|16@1+ (0.1,0) [0|6553.5] "km/h" Cluster,Infotainment
+ SG_ WheelSpeedFL : 16|16@1+ (0.01,0) [0|655.35] "m/s" Cluster
+ SG_ WheelSpeedFR : 32|16@1+ (0.01,0) [0|655.35] "m/s" Cluster
+ SG_ WheelSpeedRL : 48|16@1+ (0.01,0) [0|655.35] "m/s" Cluster
+
+BO_ 101 ClusterAlert: 8 Engine
+ SG_ AlertType : 0|8@1+ (1,0) [0|255] "" Cluster
+ SG_ AlertActive : 8|1@1+ (1,0) [0|1] "" Cluster
+ SG_ AlertPriority : 9|3@1+ (1,0) [0|7] "" Cluster
+
+BO_ 102 SystemStatus: 8 Infotainment
+ SG_ SystemReady : 0|1@1+ (1,0) [0|1] "" Infotainment,Cluster
+ SG_ SoftwareVersion : 8|24@1+ (1,0) [0|16777215] "" Infotainment,Cluster
+ SG_ DiagnosticCode : 32|16@1+ (1,0) [0|65535] "" Infotainment
+
+CM_ BO_ 100 "Vehicle wheel speed information. Speed in km/h is calculated from wheel speeds.";
+CM_ SG_ 100 Speed "Vehicle speed in kilometers per hour";
+CM_ SG_ 100 WheelSpeedFL "Front left wheel speed in meters per second";
+CM_ SG_ 100 WheelSpeedFR "Front right wheel speed in meters per second";
+CM_ SG_ 100 WheelSpeedRL "Rear left wheel speed in meters per second";
+CM_ BO_ 101 "Cluster alert messages for driver information";
+CM_ SG_ 101 AlertType "Alert type identifier (0=Speed, 1=Temperature, 2=Maintenance)";
+CM_ SG_ 101 AlertActive "1 if alert should be displayed, 0 if inactive";
+CM_ BO_ 102 "System status and diagnostics information";
+CM_ SG_ 102 SystemReady "1 if system is ready for operation";
+CM_ SG_ 102 SoftwareVersion "Encoded software version";
+
+BA_DEF_ BO_  "GenMsgCycleTime" INT 0 3600000;
+BA_DEF_DEF_  "GenMsgCycleTime" 100;
+BA_ "GenMsgCycleTime" BO_ 100 50;
+BA_ "GenMsgCycleTime" BO_ 101 100;
+BA_ "GenMsgCycleTime" BO_ 102 200;
+
+VAL_TABLE_ AlertTypeValues 0 "SpeedAlert" 1 "TemperatureAlert" 2 "MaintenanceAlert" 3 "Reserved" ;
+
+VAL_ 101 AlertType 0 "SpeedAlert" 1 "TemperatureAlert" 2 "MaintenanceAlert" 3 "Reserved" ;
+VAL_ 101 AlertActive 0 "Inactive" 1 "Active" ;
+VAL_ 102 SystemReady 0 "NotReady" 1 "Ready" ;

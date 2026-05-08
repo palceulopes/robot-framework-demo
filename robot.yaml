@@ -1,0 +1,18 @@
+*** Settings ***
+Documentation    Robot Framework configuration for automotive tests.
+
+# Report configuration
+Library    BuiltIn
+Library    Collections
+Library    Dialogs
+Library    Process
+Library    Screenshot
+Library    String
+Library    DateTime
+
+# Default timeout
+Test Timeout    60 seconds
+
+# Parallel execution settings
+# Run with: robot --parallelization all tests/
+Suite Concurrency    1
