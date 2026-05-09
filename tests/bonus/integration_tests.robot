@@ -2,7 +2,8 @@
 Documentation    Integration tests for automotive system.
 ...              More complex scenarios combining multiple components.
 
-Resource         ../resources/vehicle_keywords.resource
+Variables        ../../variables/config.py
+Resource         ${PROJECT_ROOT_STR}${/}resources/vehicle_keywords.resource
 
 Suite Setup      Initialize System Mocks
 Suite Teardown   Cleanup System Resources

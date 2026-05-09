@@ -19,11 +19,6 @@ automotive = [
     "robotframework-requests>=0.9",             # Robot REST library
     "flask>=2.3",                               # Mock ECU REST API
     "flask-cors>=4.0",                          # CORS for APIs
-    "robotframework-databaselibrary>=2.0",      # DB validation / persistence tests
-]
-
-ui = [
-    "Appium-Python-Client>=3.0",                # Optional UI / emulator testing
 ]
 
 dev = [

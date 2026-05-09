@@ -2,7 +2,8 @@
 Documentation    Smoke tests for automotive cluster and infotainment system.
 ...              Validates core functionality of vehicle signal handling and alerts.
 
-Resource         ../resources/vehicle_keywords.resource
+Variables        ../../variables/config.py
+Resource         ${PROJECT_ROOT_STR}${/}resources/vehicle_keywords.resource
 
 Suite Setup      Initialize System Mocks
 Suite Teardown   Cleanup System Resources

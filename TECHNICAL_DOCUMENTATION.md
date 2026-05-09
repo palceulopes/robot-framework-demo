@@ -1,36 +1,55 @@
-# Documentação Técnica - Framework Automotivo
+# Documentação Técnica (curated)
 
-## Arquitetura
+Este documento foca no **caminho crítico da demo** (REST + MQTT + Listener) e explica onde fazer mudanças rápidas (live-coding).
+
+## Arquitetura (caminho crítico da demo)
 
 ```
-┌─────────────────────────────────────────────┐
-│        Robot Framework Tests                 │
-│    (smoke_tests.robot)                      │
-└──────────────────┬──────────────────────────┘
-                   │
-┌──────────────────▼──────────────────────────┐
-│    Vehicle Keywords (Resource)              │
-│  (vehicle_keywords.resource)                │
-│ - Initialize System Mocks                   │
-│ - Inject Speed Signal                       │
-│ - Validate High Speed Alert                 │
-└──────────────────┬──────────────────────────┘
-                   │
-        ┌──────────┴──────────┐
-        │                     │
-    ┌───▼────────┐    ┌──────▼──────┐
-    │  AdbMock   │    │ CanBusManager│
-    │  (Device)  │    │  (Signals)   │
-    └────────────┘    └──────┬───────┘
-                             │
-                    ┌────────▼────────┐
-                    │ vehicle_signals │
-                    │     .dbc        │
-                    │ (CAN Database)  │
-                    └─────────────────┘
+RobotTests (network_stack.robot)
+  ├─ uses Resources (rest_ecu_keywords.resource, mqtt_keywords.resource)
+  ├─ loads Variables (variables/config.py)
+  ├─ starts Processes:
+  │    ├─ FlaskMockEcu (mock_servers/ecu_rest_server.py)  -> HTTP/REST
+  │    └─ MqttBroker (mock_servers/mqtt_broker_helper.py) -> MQTT pub/sub
+  └─ drives Libraries (Python):
+       ├─ libraries/rest_ecu_api.py
+       ├─ libraries/mqtt_vehicle_network.py
+       └─ libraries/automotive_listener.py (metrics)
 ```
 
-## Componentes Principais
+## “Microservices” no contexto do repo
+
+- O **Flask mock ECU** é um processo com contrato HTTP (`/api/health`, `/api/signals/...`).
+- O **broker MQTT** é outro processo (infra pub/sub).
+- Os testes Robot são o **cliente** (com libraries Python finas), exercitando os contratos.
+
+Isso é suficiente para uma conversa de “everyday work”: subir serviços, rodar testes, lidar com falhas, alterar contrato/config.
+
+## Componentes principais (demo)
+
+### 1) `variables/config.py` (config central)
+
+Onde ficam host/port/base URL. Se o Vitor pedir para mudar endpoint/porta, é um dos primeiros lugares.
+
+### 2) `mock_servers/ecu_rest_server.py` (mock ECU)
+
+Servidor Flask “standalone” com estado em memória. Útil para simular mudanças de contrato e cenários de erro.
+
+### 3) `libraries/rest_ecu_api.py` (client REST)
+
+Client com retry e logging. É o lado “técnico” em Python (Robot chama keywords, library faz HTTP).
+
+### 4) `libraries/mqtt_vehicle_network.py` + `mock_servers/mqtt_broker_helper.py`
+
+Pub/sub para tópicos de sensores/alertas. Bom para discutir eventual consistency, timeouts e testes resilientes.
+
+### 5) `libraries/automotive_listener.py`
+
+Gera métricas (JSON/CSV) para além do report padrão do Robot — história boa de observabilidade.
+
+## Bonus (automotivo / CAN)
+
+O CAN/DBC continua disponível (keywords em `resources/vehicle_keywords.resource`, DBC em `resources/vehicle_signals.dbc`), mas não é necessário para o caminho crítico.
 
 ### 1. AdbMock - Simulação de Dispositivo
 

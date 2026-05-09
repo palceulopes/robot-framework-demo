@@ -7,7 +7,7 @@ Centralizes global variables, paths, and constants used across the test suite.
 import os
 from pathlib import Path
 
-# Base project paths
+# Base project paths (PROJECT_ROOT_STR: use in Robot as ${PROJECT_ROOT_STR}${/}resources/... after Variables import)
 PROJECT_ROOT = Path(__file__).parent.parent
 DBC_PATH = PROJECT_ROOT / "resources" / "vehicle_signals.dbc"
 LOGS_PATH = PROJECT_ROOT / "logs"

@@ -2,7 +2,7 @@
 Documentation    Vehicle system keywords for automotive test framework.
 ...              High-level keywords for cluster and infotainment testing.
 
-Variables        ../variables/config.py
+Variables        ${CURDIR}${/}../variables/config.py
 Library          Collections
 Library          libraries.automotive_lib    dbc_path=${DBC_PATH}
 Library          DateTime

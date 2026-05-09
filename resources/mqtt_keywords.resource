@@ -4,7 +4,7 @@ Documentation    MQTT vehicle-network keywords (install: uv sync --extra automot
 ...              Use when an MQTT broker is reachable at MQTT_BROKER_HOST:MQTT_BROKER_PORT
 ...              (embedded: uv run python mock_servers/mqtt_broker_helper.py).
 
-Variables        ../variables/config.py
+Variables        ${CURDIR}${/}../variables/config.py
 Library          libraries.mqtt_vehicle_network
 ...                  broker_host=${MQTT_BROKER_HOST}
 ...                  broker_port=${MQTT_BROKER_PORT}

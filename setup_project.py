@@ -73,9 +73,9 @@ def verify_files():
     """Verify critical files exist."""
     required_files = {
         "libraries/automotive_lib.py": "Automotive library",
-        "resources/vehicle_keywords.resource": "Robot keywords",
-        "resources/vehicle_signals.dbc": "CAN database",
-        "tests/smoke_tests.robot": "Test suite",
+        "resources/rest_ecu_keywords.resource": "REST keywords (demo)",
+        "resources/mqtt_keywords.resource": "MQTT keywords (demo)",
+        "tests/network_stack.robot": "Demo test suite (REST + MQTT)",
         "variables/config.py": "Configuration",
     }
     
@@ -100,16 +100,13 @@ def print_next_steps():
     print("\n" + "="*60)
     print("AUTOMOTIVE TEST FRAMEWORK - SETUP COMPLETE")
     print("="*60)
-    print("\nNext steps:")
-    print("1. Run all tests:")
-    print("   robot tests/")
-    print("\n2. Run specific test:")
-    print("   robot -t 'Verify High Speed Behavior' tests/smoke_tests.robot")
-    print("\n3. Run with detailed reports:")
-    print("   robot --outputdir ./results tests/")
-    print("\n4. View test results:")
-    print("   Open results/report.html in your browser")
-    print("\nFor more information, see README.md")
+    print("\nNext steps (demo-ready):")
+    print("1. Install demo dependencies:")
+    print("   uv sync --extra automotive")
+    print("\n2. Run the demo suite (REST + MQTT) with metrics:")
+    print("   uv run robot --listener libraries.automotive_listener tests/network_stack.robot")
+    print("\nBonus (CAN/DBC): tests are under tests/bonus/")
+    print("\nFor more information, see README.md and QUICKSTART.md")
     print("="*60 + "\n")
 
 

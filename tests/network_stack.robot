@@ -6,9 +6,9 @@ Documentation    MQTT + REST integration using embedded mock servers (automotive
 
 Library          Process
 Library          Collections
-Resource         ../resources/mqtt_keywords.resource
-Resource         ../resources/rest_ecu_keywords.resource
 Variables        ../variables/config.py
+Resource         ${PROJECT_ROOT_STR}${/}resources/mqtt_keywords.resource
+Resource         ${PROJECT_ROOT_STR}${/}resources/rest_ecu_keywords.resource
 
 Suite Setup      Start Stack And Connect Clients
 Suite Teardown   Stop Stack And Disconnect Clients
