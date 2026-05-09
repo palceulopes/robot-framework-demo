@@ -7,7 +7,7 @@ Este documento foca no **caminho crítico da demo** (REST + MQTT + Listener) e e
 ```
 RobotTests (network_stack.robot)
   ├─ uses Resources (rest_ecu_keywords.resource, mqtt_keywords.resource)
-  ├─ loads Variables (variables/config.py)
+  ├─ loads Variables (`variables.config` → ficheiro `variables/config.py`; requer `--pythonpath .` ou `uv pip install -e .`)
   ├─ starts Processes:
   │    ├─ FlaskMockEcu (mock_servers/ecu_rest_server.py)  -> HTTP/REST
   │    └─ MqttBroker (mock_servers/mqtt_broker_helper.py) -> MQTT pub/sub

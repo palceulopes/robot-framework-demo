@@ -1,11 +1,11 @@
 @echo off
 REM Windows helper: delete Robot/generated folders (plain rmdir — no uv).
-REM Usage: run.bat    OR    run.bat clean
+REM Usage: delete_logs_results.bat    OR    delete_logs_results.bat clean
 
 setlocal
 if "%~1"=="" goto clean
 if /i "%~1"=="clean" goto clean
-echo Usage: run.bat [clean]
+echo Usage: delete_logs_results.bat [clean]
 echo Removes: results\, logs\, .robocache\
 exit /b 1
 

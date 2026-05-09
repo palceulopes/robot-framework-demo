@@ -16,7 +16,9 @@ uv sync --extra automotive
 uv run robot --pythonpath . --listener libraries.automotive_listener tests/network_stack.robot
 ```
 
-Optional on Windows: `run.bat` only deletes `results/`, `logs/`, `.robocache/` (no `uv`)—useful before a clean rerun.
+Suites load config with `Variables    variables.config` (module `variables/config.py`). Use `--pythonpath .` **or** `uv pip install -e .` so Python resolves the `variables` package.
+
+Optional on Windows: `delete_logs_results.bat` removes `results/`, `logs/`, `.robocache/` (no `uv`) before a clean rerun.
 
 ## Estrutura (visão rápida)
 

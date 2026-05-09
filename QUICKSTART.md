@@ -11,8 +11,10 @@ uv sync --extra automotive
 ## 2) Rodar a demo (REST + MQTT + Listener)
 
 ```bash
-uv run robot --listener libraries.automotive_listener tests/network_stack.robot
+uv run robot --pythonpath . --listener libraries.automotive_listener tests/network_stack.robot
 ```
+
+(Config is imported as the Python module `variables.config`; `--pythonpath .` puts the repo root on `PYTHONPATH`. Alternatively: `uv pip install -e .` once, then you can often omit `--pythonpath .`.)
 
 O suite `tests/network_stack.robot` sobe:
 - `mock_servers/ecu_rest_server.py` (Flask) em `http://127.0.0.1:8765`

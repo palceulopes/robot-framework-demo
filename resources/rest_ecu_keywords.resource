@@ -3,7 +3,7 @@ Documentation    REST ECU API keywords (install: uv sync --extra automotive).
 ...
 ...              Point ECU_BASE_URL at mock_servers/ecu_rest_server.py or a real bench ECU.
 
-Variables        ${CURDIR}${/}../variables/config.py
+Variables        variables.config
 Library          Collections
 Library          libraries.rest_ecu_api    base_url=${ECU_BASE_URL}
 

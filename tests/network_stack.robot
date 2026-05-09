@@ -6,7 +6,7 @@ Documentation    MQTT + REST integration using embedded mock servers (automotive
 
 Library          Process
 Library          Collections
-Variables        ../variables/config.py
+Variables        variables.config
 Resource         ${PROJECT_ROOT_STR}${/}resources/mqtt_keywords.resource
 Resource         ${PROJECT_ROOT_STR}${/}resources/rest_ecu_keywords.resource
 
