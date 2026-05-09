@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation    Robot Framework configuration for automotive tests.
+Documentation    Robot Framework configuration for automotive tests (standard Robot Framework settings).
 
 # Report configuration
 Library    BuiltIn

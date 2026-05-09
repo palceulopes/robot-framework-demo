@@ -1,15 +1,15 @@
 # Automotive Test Framework (Robot + Python)
 
-Framework de automação com **Robot Framework** e **Python 3.12**, com um setup de “microservices simples” para demo:
+Automation framework built with **Robot Framework** and **Python 3.12**, with a simple “microservices” setup for a demo:
 
-- **Mock ECU via REST (Flask)**: simula endpoints de um ECU.
-- **Broker MQTT embutido (aMQTT)**: pub/sub para simular rede de veículo/sensores.
-- **Client libraries em Python**: keywords Robot chamam libraries técnicas.
-- **Listener customizado**: métricas além de PASS/FAIL.
+- **Mock ECU via REST (Flask)**: simulates ECU-like endpoints.
+- **Embedded MQTT broker (aMQTT)**: pub/sub to simulate a vehicle/sensor network.
+- **Python client libraries**: Robot keywords call technical libraries.
+- **Custom listener**: metrics beyond PASS/FAIL.
 
-O foco é mostrar **workflow real**: rodar testes, interpretar falhas e ajustar rapidamente (config/resources/libraries).
+The goal is to show **real day-to-day workflow**: run tests, interpret failures, and adjust quickly (config/resources/libraries).
 
-## TL;DR (comandos que funcionam no demo)
+## TL;DR (demo commands that work)
 
 ```bash
 uv sync --extra automotive
@@ -18,25 +18,29 @@ uv run robot --pythonpath . --listener libraries.automotive_listener tests/netwo
 
 Suites load config with `Variables    variables.config` (module `variables/config.py`). Use `--pythonpath .` **or** `uv pip install -e .` so Python resolves the `variables` package.
 
+To wipe prior Robot output before a clean run (PowerShell, from repo root):
+```powershell
+Remove-Item -Recurse -Force results, logs, .robocache -ErrorAction SilentlyContinue
+```
 Optional on Windows: `delete_logs_results.bat` removes `results/`, `logs/`, `.robocache/` (no `uv`) before a clean rerun.
 
-## Estrutura (visão rápida)
+## Structure (quick view)
 
 ```
 robot-framework/
-├── libraries/        # lógica técnica Python (REST client, MQTT client, listener, CAN bonus)
-├── mock_servers/     # processos: Flask mock ECU + helper do broker MQTT
-├── resources/        # keywords reutilizáveis (Robot) para REST/MQTT/CAN
-├── tests/            # suites Robot (demo principal: network_stack.robot)
-└── variables/        # configuração (hosts/ports/paths)
+├── libraries/        # Python technical logic (REST client, MQTT client, listener, CAN bonus)
+├── mock_servers/     # processes: Flask mock ECU + MQTT broker helper
+├── resources/        # reusable Robot keywords (REST/MQTT/CAN)
+├── tests/            # Robot suites (main demo: network_stack.robot)
+└── variables/        # configuration (hosts/ports/paths)
 ```
 
-## Documentação
+## Documentation
 
-- **Guia rápido**: `QUICKSTART.md`
-- **Detalhes técnicos/arquitetura**: `TECHNICAL_DOCUMENTATION.md`
+- **Quick start**: `QUICKSTART.md`
+- **Technical details / architecture**: `TECHNICAL_DOCUMENTATION.md`
 
-## Notas (para a sessão)
+## Notes (for the live session)
 
-- **REST + MQTT + Listener** são o caminho crítico da demo.
-- **CAN/DBC** existe como “bonus” automotivo, mas não é obrigatório para a sessão.
+- **REST + MQTT + Listener** are the critical path for the demo.
+- **CAN/DBC** exists as an automotive “bonus”, but it’s not required for the session.

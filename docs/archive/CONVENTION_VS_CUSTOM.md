@@ -82,10 +82,10 @@ flowchart LR
 - **Convention**: `logging.basicConfig`, `sys.version_info`, dynamic imports for dependency checks.
 - **Customization**: `required_files` / directories—**your definition of “minimum viable project”.**
 
-### [`quickstart.py`](../quickstart.py), [`delete_logs_results.bat`](../delete_logs_results.bat)
+### [`quickstart.py`](../quickstart.py)
 
-- **Convention**: `subprocess.run`, `Path(__file__).parent`; batch `rmdir` for cleanup.
-- **Customization**: [`quickstart.py`](../quickstart.py)—commands you wrap. [`delete_logs_results.bat`](../delete_logs_results.bat) is **only** local cleanup of `results/`, `logs/`, `.robocache/` (no `uv`); run tests from the shell with `uv run robot …`.
+- **Convention**: `subprocess.run`, `Path(__file__).parent`.
+- **Customization**: commands you wrap. For wiping `results/`, `logs/`, `.robocache/`, use a one-off shell command (e.g. `Remove-Item` in PowerShell) instead of duplicating shortcuts in `.bat` and `Makefile`.
 
 Robot settings use `Variables    variables.config` (same idea as `import variables.config`): requires `--pythonpath .` or editable install so the `variables` package resolves.
 
