@@ -6,12 +6,11 @@ simulating hardware interactions for vehicle cluster and infotainment testing.
 """
 
 import logging
-import os
 from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock
 
 from robot.api.deco import library
 

@@ -17,7 +17,6 @@ Example:
 import json
 import logging
 import time
-from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 from robot.api.deco import library
@@ -26,8 +25,6 @@ try:
     import paho.mqtt.client as mqtt
 except ImportError:
     mqtt = None
-
-logger = logging.getLogger(__name__)
 
 
 @library(scope="SUITE", version="1.0.0", auto_keywords=True)
@@ -42,17 +39,10 @@ class MqttVehicleNetwork:
     - Topic-based communication (CAN-like)
     """
     
-    # Standard vehicle topics
+    # Known demo topics (you can still publish/await arbitrary topics)
     TOPICS = {
         "speed": "vehicle/sensors/speed",
-        "temperature": "vehicle/sensors/temperature",
-        "rpm": "vehicle/sensors/engine/rpm",
-        "fuel_level": "vehicle/sensors/fuel_level",
-        "alerts": "vehicle/alerts/+",
         "high_speed": "vehicle/alerts/high_speed",
-        "high_temp": "vehicle/alerts/high_temperature",
-        "maintenance": "vehicle/alerts/maintenance",
-        "diagnostics": "vehicle/diagnostics/+",
     }
     
     def __init__(
@@ -85,6 +75,7 @@ class MqttVehicleNetwork:
         
         # Message storage for waiting/assertions
         self.received_messages: Dict[str, List[Dict[str, Any]]] = {}
+        self._subscribed_topics: set[str] = set()
         
         # Create MQTT client
         self.client = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2, client_id=client_id)
@@ -103,9 +94,10 @@ class MqttVehicleNetwork:
         if reason_code == 0:
             self.connected = True
             self.logger.info(f"Connected to MQTT broker at {self.broker_host}:{self.broker_port}")
-            # Subscribe to all vehicle topics
+            # Subscribe to known demo topics; other topics are subscribed on-demand.
             for topic in self.TOPICS.values():
                 client.subscribe(topic, qos=1)
+                self._subscribed_topics.add(topic)
         else:
             self.logger.error(f"MQTT connection failed: {reason_code}")
             self.connected = False
@@ -242,6 +234,11 @@ class MqttVehicleNetwork:
             Message payload or None if timeout
         """
         try:
+            # Make sure we are subscribed to the topic we are waiting for.
+            if self.connected and topic not in self._subscribed_topics:
+                self.client.subscribe(topic, qos=1)
+                self._subscribed_topics.add(topic)
+
             start_time = time.time()
             while time.time() - start_time < timeout:
                 if topic in self.received_messages and self.received_messages[topic]:

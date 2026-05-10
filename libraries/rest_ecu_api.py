@@ -14,10 +14,8 @@ Example:
         Should Be Equal As Numbers    ${speed}    120
 """
 
-import json
 import logging
 import time
-from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 from robot.api.deco import library
@@ -28,8 +26,6 @@ try:
     from urllib3.util.retry import Retry
 except ImportError:
     requests = None
-
-logger = logging.getLogger(__name__)
 
 
 @library(scope="SUITE", version="1.0.0", auto_keywords=True)
@@ -95,7 +91,6 @@ class RestEcuApi:
         self.session.mount("https://", adapter)
         
         self.last_response: Optional[requests.Response] = None
-        self.request_history: List[Dict[str, Any]] = []
         
         self.logger.info(f"REST ECU API initialized: {self.base_url}")
     
@@ -106,14 +101,8 @@ class RestEcuApi:
         return f"{self.base_url}{endpoint}"
     
     def _log_request(self, method: str, url: str, **kwargs) -> None:
-        """Log HTTP request."""
-        self.request_history.append({
-            "timestamp": time.time(),
-            "method": method,
-            "url": url,
-            "kwargs": kwargs,
-        })
-        self.logger.debug(f"{method} {url}")
+        """Log HTTP request (debug-level only)."""
+        self.logger.debug("%s %s", method, url)
     
     def get_ecu_signal(self, signal_name: str) -> Any:
         """
@@ -272,29 +261,3 @@ class RestEcuApi:
         except requests.RequestException:
             self.logger.warning("ECU not reachable")
             return False
-    
-    def get_response_status(self) -> int:
-        """Get last response HTTP status code."""
-        return self.last_response.status_code if self.last_response else None
-    
-    def get_response_body(self) -> str:
-        """Get last response body."""
-        return self.last_response.text if self.last_response else None
-    
-    def get_request_count(self) -> int:
-        """Get total requests made."""
-        return len(self.request_history)
-    
-    def clear_history(self) -> None:
-        """Clear request history."""
-        self.request_history = []
-    
-    def get_api_status(self) -> Dict[str, Any]:
-        """Get overall API client status."""
-        return {
-            "base_url": self.base_url,
-            "timeout": self.timeout,
-            "request_count": self.get_request_count(),
-            "last_response_status": self.get_response_status(),
-            "connected": self.check_ecu_connectivity(),
-        }
