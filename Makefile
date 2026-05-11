@@ -7,7 +7,7 @@ install-dev:
 	uv sync --extra automotive --extra dev
 
 test:
-	uv run robot --pythonpath . --outputdir results tests/network_stack.robot
+	uv run robot -d results tests/network_stack.robot
 
 lint:
 	uv run flake8 mock_server.py mqtt_broker.py libraries/automotive_lib.py config.py --max-line-length=88
