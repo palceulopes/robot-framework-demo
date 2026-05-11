@@ -1,22 +1,8 @@
 """
-Automotive test framework libraries.
-
-This package contains mock implementations and managers for automotive testing,
-including ADB mock for device communication and CAN bus manager for signal injection.
+Automotive test framework libraries — unified REST + MQTT client.
 """
 
-from .automotive_lib import (
-    AdbMock,
-    CanBusManager,
-    AutomotiveLibrary,
-    SpeedSignal,
-)
+from .automotive_lib import AutomotiveLib
 
-__all__ = [
-    "AdbMock",
-    "CanBusManager",
-    "AutomotiveLibrary",
-    "SpeedSignal",
-]
-
-__version__ = "1.0.0"
+__all__ = ["AutomotiveLib"]
+__version__ = "2.0.0"
