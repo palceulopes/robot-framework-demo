@@ -1,7 +1,3 @@
-# AGENTS.md
-
-## Cursor Cloud specific instructions
-
 ### Overview
 
 Automotive Test Framework — "Pragmatic Lab Setup" with Robot Framework + Python 3.12. A single unified mock server (`mock_server.py`) hosts Flask REST on :8080 and an embedded aMQTT broker on :1883. No external infrastructure required.
