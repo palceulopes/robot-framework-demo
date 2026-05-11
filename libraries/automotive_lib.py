@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from robot.api.deco import library  # noqa: E402
 import requests  # noqa: E402
-import paho.mqtt.client as mqtt  # noqa: E402
+import paho.mqtt.client as mqtt  # noqa: E402 #client for MQTT communication
 import config  # noqa: E402
 
 
@@ -48,8 +48,10 @@ class AutomotiveLib:
                 return self.messages.pop(0)
             time.sleep(0.1)
         return None
+    
+    
 
     # REST
 
-    def get_vehicle_speed(self):
+    def get_vehicle_speed(self): 
         return requests.get(f"{config.BASE_URL}/api/vehicle/speed").json()

@@ -9,7 +9,12 @@ Suite Teardown    Stop Lab
 *** Test Cases ***
 REST Vehicle Speed
     ${resp}=    Get Vehicle Speed
-    Should Be Equal As Numbers    ${resp}[speed]    100
+        
+    # Should Be Equal As Numbers    ${resp}[speed]    100
+    Sleep    1s
+    ${resp2}=    Get Vehicle Speed
+    Should Be Higher than        ${resp}[speed]    ${resp2}[speed]
+    
 
 MQTT Vehicle Speed
     Subscribe Speed
