@@ -149,7 +149,7 @@ class AutomotiveListener:
         # Count automotive-specific keywords
         if "signal" in name.lower() or "inject" in name.lower():
             self.signal_count += 1
-        elif "api" in name.lower() or "ecu" in name.lower():
+        elif "api" in name.lower() or "ecu" in name.lower() or "vehicle" in name.lower():
             self.api_call_count += 1
         elif "alert" in name.lower():
             self.alert_count += 1

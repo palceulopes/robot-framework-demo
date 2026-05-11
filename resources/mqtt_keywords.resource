@@ -41,6 +41,13 @@ Clear MQTT Inbox
     Clear Messages
 
 
+Subscribe To MQTT Topic
+    [Arguments]    ${topic}
+    [Documentation]    Subscribe before publishers emit (avoids missing dispatch/job messages).
+    ${ok}=    Subscribe To Topic    ${topic}
+    Should Be True    ${ok}
+
+
 Get MQTT Client Status
     [Documentation]    Return connection and broker endpoint info as dict.
     ${s}=    Get Broker Status

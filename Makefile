@@ -1,37 +1,36 @@
-# Makefile equivalent for automotive test framework
-# Windows PowerShell usage
+# Makefile for automotive test framework (Windows cmd-compatible where noted)
 
 # Setup and initialization
 setup:
-	python setup_project.py
+	uv run python setup_project.py
 
-# Run all tests
+# Run default suites under tests/ (excludes nothing — bonus lives in tests/bonus/)
 test:
-	robot tests/
+	uv run robot --pythonpath . tests/
 
-# Run specific test suite
+# Bonus suites (CAN / integration demos)
 test-smoke:
-	robot tests/smoke_tests.robot
+	uv run robot --pythonpath . tests/bonus/smoke_tests.robot
 
 test-integration:
-	robot tests/integration_tests.robot
+	uv run robot --pythonpath . tests/bonus/integration_tests.robot
 
-# Run specific test case
+# Main Vehicle + Dispatch + MQTT demo (recommended)
+test-demo:
+	uv run robot --pythonpath . --listener libraries.automotive_listener --outputdir results tests/network_stack.robot
+
+# Run specific test case (example)
 test-speed:
-	robot -t "Verify High Speed Behavior" tests/smoke_tests.robot
+	uv run robot --pythonpath . -t "Verify High Speed Behavior" tests/bonus/smoke_tests.robot
 
-# Run with detailed reports
+# HTML report output
 test-report:
-	robot --outputdir ./results tests/
+	uv run robot --pythonpath . --outputdir ./results tests/
 	@echo Open results/report.html to view report
 
-# Run examples
+# Run examples script (optional tutorial snippets)
 examples:
-	python examples.py
-
-# Quick start menu
-quickstart:
-	python quickstart.py
+	uv run python examples.py
 
 # Clean up generated files
 clean:
@@ -41,66 +40,57 @@ clean:
 	@if exist .robocache (rmdir /s /q .robocache)
 	@echo Cleanup complete
 
-# Install dependencies
+# Install / sync (preferred: full project with extras)
 install:
-	uv pip install robotframework cantools python-can
+	uv sync --extra automotive
 
 install-dev:
-	uv pip install robotframework cantools python-can pytest pytest-cov black flake8
+	uv sync --extra automotive --extra dev
 
 # Check code quality
 lint:
-	flake8 libraries/ --max-line-length=88
-	black --check libraries/
+	uv run flake8 libraries/ mock_servers/ --max-line-length=88
+	uv run black --check libraries/ mock_servers/
 
 format:
-	black libraries/
+	uv run black libraries/ mock_servers/
 
-# Documentation
+# Documentation pointer
 docs:
-	@echo Automotive Test Framework Documentation
-	@echo ========================================
-	@echo.
-	@echo Quick Links:
-	@echo - README.md - Main documentation
-	@echo - QUICKSTART.md - Quick start guide
-	@echo - TECHNICAL_DOCUMENTATION.md - Technical details
-	@echo - examples.py - Usage examples
-	@echo.
+	@echo Automotive Test Framework
+	@echo ========================
+	@echo See README.md for setup, ports, and demo commands.
 
 # Help
 help:
 	@echo Automotive Test Framework - Available Commands
 	@echo ==============================================
 	@echo.
-	@echo Setup and Installation:
-	@echo   make setup              - Run setup verification
-	@echo   make install            - Install dependencies
-	@echo   make install-dev        - Install dev dependencies
+	@echo Setup:
+	@echo   make setup              - Run setup verification (uv run python setup_project.py)
+	@echo   make install            - uv sync --extra automotive
+	@echo   make install-dev        - uv sync with dev extras
 	@echo.
 	@echo Testing:
-	@echo   make test               - Run all tests
-	@echo   make test-smoke         - Run smoke tests only
-	@echo   make test-integration   - Run integration tests only
-	@echo   make test-speed         - Run specific speed test
-	@echo   make test-report        - Run tests with HTML report
+	@echo   make test               - All Robot suites under tests/
+	@echo   make test-demo          - Vehicle + Dispatch + MQTT (network_stack.robot + listener)
+	@echo   make test-smoke         - tests/bonus/smoke_tests.robot
+	@echo   make test-integration   - tests/bonus/integration_tests.robot
+	@echo   make test-speed         - Example: single test from smoke suite
+	@echo   make test-report        - All tests with HTML under results/
 	@echo.
-	@echo Examples and Documentation:
-	@echo   make examples           - Show usage examples
-	@echo   make quickstart         - Interactive quick start menu
-	@echo   make docs               - Show documentation links
+	@echo Examples:
+	@echo   make examples           - python examples.py via uv
+	@echo   make docs               - Points to README.md
 	@echo.
-	@echo Code Quality:
-	@echo   make lint               - Check code style
-	@echo   make format             - Format code
+	@echo Code quality:
+	@echo   make lint               - flake8 + black --check
+	@echo   make format             - black
 	@echo.
 	@echo Maintenance:
-	@echo   make clean              - Clean up generated files
+	@echo   make clean              - Remove results, logs, .robocache
 	@echo.
-	@echo Example Usage:
-	@echo   make setup              - First time setup
-	@echo   make test               - Run all tests
-	@echo   make test-report        - View HTML report
+	@echo Example: make install ^&^& make test-demo
 	@echo.
 
-.PHONY: setup test test-smoke test-integration test-speed test-report examples quickstart clean install install-dev lint format docs help
+.PHONY: setup test test-demo test-smoke test-integration test-speed test-report examples clean install install-dev lint format docs help

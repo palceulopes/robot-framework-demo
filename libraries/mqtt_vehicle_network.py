@@ -135,6 +135,20 @@ class MqttVehicleNetwork:
         except Exception as e:
             self.logger.error(f"Error processing message: {e}")
     
+    def subscribe_to_topic(self, topic: str, qos: int = 1) -> bool:
+        """Subscribe to an arbitrary topic (e.g. dispatch/commands/+) before events occur."""
+        try:
+            if not self.connected:
+                self.logger.warning("Cannot subscribe: not connected to broker")
+                return False
+            self.client.subscribe(topic, qos=qos)
+            self._subscribed_topics.add(topic)
+            self.logger.info("Subscribed to %s", topic)
+            return True
+        except Exception as e:
+            self.logger.error("Subscribe failed: %s", e)
+            return False
+
     def connect_to_broker(self) -> bool:
         """
         Connect to MQTT broker.

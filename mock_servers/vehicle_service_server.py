@@ -1,10 +1,10 @@
 """
-Standalone mock ECU REST API for local testing (Flask).
+Vehicle Service (mock) — Flask REST API simulating ECU-facing signals for local testing.
 
-Pairs with libraries.rest_ecu_api.RestEcuApi — same routes and JSON shapes.
+Pairs with libraries.rest_vehicle_service_api.RestVehicleServiceApi — same routes and JSON shapes.
 
 Usage:
-  uv run python mock_servers/ecu_rest_server.py --host 127.0.0.1 --port 8765
+  uv run python mock_servers/vehicle_service_server.py --host 127.0.0.1 --port 8765
 """
 
 from __future__ import annotations
@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 
 
 def create_app(initial: Dict[str, Any] | None = None) -> Flask:
-    """Create Flask app with in-memory ECU state."""
+    """Create Flask app with in-memory vehicle/ECU state."""
     state: Dict[str, Any] = {
         "speed": 0.0,
         "rpm": 800.0,
@@ -46,7 +46,7 @@ def create_app(initial: Dict[str, Any] | None = None) -> Flask:
 
     @app.get("/api/health")
     def health() -> Any:
-        return jsonify({"status": "ok", "ts": time.time()})
+        return jsonify({"status": "ok", "service": "vehicle", "ts": time.time()})
 
     @app.get("/api/signals/<name>")
     def signal(name: str) -> Any:
@@ -105,14 +105,14 @@ def _unit_for(key: str) -> str:
 
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    p = argparse.ArgumentParser(description="Mock ECU REST server")
+    p = argparse.ArgumentParser(description="Vehicle Service REST mock (Flask)")
     p.add_argument("--host", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8765)
     p.add_argument("--debug", action="store_true")
     args = p.parse_args()
 
     app = create_app()
-    logger.info("Mock ECU REST listening on http://%s:%s", args.host, args.port)
+    logger.info("Vehicle Service (mock) listening on http://%s:%s", args.host, args.port)
     app.run(host=args.host, port=args.port, debug=args.debug, threaded=True)
 
 

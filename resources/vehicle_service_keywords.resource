@@ -1,16 +1,16 @@
 *** Settings ***
-Documentation    REST ECU API keywords (install: uv sync --extra automotive).
+Documentation    Vehicle Service REST keywords (install: uv sync --extra automotive).
 ...
-...              Point ECU_BASE_URL at mock_servers/ecu_rest_server.py or a real bench ECU.
+...              Point ECU_BASE_URL / VEHICLE_SERVICE_BASE_URL at mock_servers/vehicle_service_server.py.
 
 Variables        variables.config
 Library          Collections
-Library          libraries.rest_ecu_api    base_url=${ECU_BASE_URL}
+Library          libraries.rest_vehicle_service_api    base_url=${ECU_BASE_URL}
 
 
 *** Keywords ***
 ECU Should Be Reachable
-    [Documentation]    GET /api/health must return HTTP 200.
+    [Documentation]    GET /api/health must return HTTP 200 (Vehicle Service mock).
     ${ok}=    Check Ecu Connectivity
     Should Be True    ${ok}
 
@@ -29,6 +29,6 @@ Get ECU Firmware Version String
 
 
 ECU Diagnostics Should Be Available
-    [Documentation]    Fetch diagnostics/errors payload from mock ECU.
+    [Documentation]    Fetch diagnostics/errors payload from Vehicle Service mock.
     ${d}=    Get Diagnostics
     Dictionary Should Contain Key    ${d}    errors

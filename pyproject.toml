@@ -34,7 +34,7 @@ requires = ["setuptools>=68.0"]
 build-backend = "setuptools.build_meta"
 
 # Robot layout: only `libraries` and `variables` are Python packages; `resources` and
-# `mock_servers` are data/scripts and must not be auto-discovered as packages.
+# `mock_servers` (vehicle/dispatch/mqtt scripts) are not packages.
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["libraries*", "variables*"]

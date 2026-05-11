@@ -73,7 +73,7 @@ def verify_files():
     """Verify critical files exist."""
     required_files = {
         "libraries/automotive_lib.py": "Automotive library",
-        "resources/rest_ecu_keywords.resource": "REST keywords (demo)",
+        "resources/vehicle_service_keywords.resource": "Vehicle Service REST keywords",
         "resources/mqtt_keywords.resource": "MQTT keywords (demo)",
         "tests/network_stack.robot": "Demo test suite (REST + MQTT)",
         "variables/config.py": "Configuration",
@@ -104,9 +104,9 @@ def print_next_steps():
     print("1. Install demo dependencies:")
     print("   uv sync --extra automotive")
     print("\n2. Run the demo suite (REST + MQTT) with metrics:")
-    print("   uv run robot --listener libraries.automotive_listener tests/network_stack.robot")
+    print("   uv run robot --pythonpath . --listener libraries.automotive_listener tests/network_stack.robot")
     print("\nBonus (CAN/DBC): tests are under tests/bonus/")
-    print("\nFor more information, see README.md and QUICKSTART.md")
+    print("\nFor more information, see README.md")
     print("="*60 + "\n")
 
 
