@@ -1,13 +1,17 @@
 """Robot Framework library — REST + MQTT keywords."""
 
 import json
+import sys
 import time
+from pathlib import Path
 from typing import Any, Dict, Optional
 
-from robot.api.deco import library
-import requests
-import paho.mqtt.client as mqtt
-import config
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from robot.api.deco import library  # noqa: E402
+import requests  # noqa: E402
+import paho.mqtt.client as mqtt  # noqa: E402
+import config  # noqa: E402
 
 
 @library(scope="SUITE", version="3.0.0", auto_keywords=True)

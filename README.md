@@ -16,7 +16,7 @@ config.py             ← All ports/hosts in one place
 
 ```bash
 uv sync --extra automotive
-uv run robot --pythonpath . --outputdir results tests/network_stack.robot
+uv run robot -d results tests/network_stack.robot
 ```
 
 ## What the test does

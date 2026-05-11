@@ -3,7 +3,7 @@ Documentation    Vehicle Service + MQTT — simple E2E demo.
 
 Library          Process
 Library          Collections
-Variables        config
+Variables        ../config.py
 Library          libraries.automotive_lib
 ...                  base_url=${BASE_URL}
 ...                  mqtt_host=${MQTT_HOST}
