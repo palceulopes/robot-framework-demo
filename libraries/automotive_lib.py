@@ -7,6 +7,8 @@ for the "Pragmatic Lab Setup" demo.
 Thread-safe message inbox allows the classic pattern:
   Subscribe → REST POST → Wait For Message
 without race conditions.
+
+All default values come from config.py — no hardcoded strings here.
 """
 
 from __future__ import annotations
@@ -22,6 +24,8 @@ from robot.api.deco import library
 import requests
 import paho.mqtt.client as mqtt
 
+import config
+
 
 @library(scope="SUITE", version="2.0.0", auto_keywords=True)
 class AutomotiveLib:
@@ -29,10 +33,10 @@ class AutomotiveLib:
 
     def __init__(
         self,
-        base_url: str = "http://127.0.0.1:8080",
-        mqtt_host: str = "127.0.0.1",
-        mqtt_port: int = 1883,
-        timeout: int = 10,
+        base_url: str = config.BASE_URL,
+        mqtt_host: str = config.MQTT_HOST,
+        mqtt_port: int = config.MQTT_PORT,
+        timeout: int = config.TIMEOUT,
     ):
         self.logger = logging.getLogger(self.__class__.__name__)
         self.base_url = base_url.rstrip("/")
@@ -98,7 +102,7 @@ class AutomotiveLib:
         self.logger.info("Subscribed → %s", topic)
 
     def wait_for_message(
-        self, topic: str, timeout: int = 5
+        self, topic: str, timeout: int = config.TIMEOUT
     ) -> Optional[Dict[str, Any]]:
         """Block until a message arrives on *topic* or *timeout* seconds elapse."""
         deadline = time.time() + int(timeout)

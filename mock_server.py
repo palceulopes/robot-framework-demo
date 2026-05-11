@@ -1,14 +1,7 @@
 """
 Unified Mock Server — Flask REST API + embedded aMQTT broker in a single process.
 
-Starts:
-  - MQTT broker on 0.0.0.0:1883  (aMQTT, anonymous access)
-  - Flask REST   on 0.0.0.0:8080  (Vehicle + Dispatch routes)
-
-Routes:
-  GET  /api/health           → {"status": "ok"}
-  GET  /api/vehicle/status   → vehicle state dict
-  POST /api/v1/jobs          → creates job, publishes to vehicle/{id}/commands
+All ports, hosts, and topic patterns are read from config.py.
 
 Usage:
   uv run python mock_server.py
@@ -29,12 +22,14 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import paho.mqtt.client as paho_mqtt
 
+import config
+
 logger = logging.getLogger(__name__)
 
 # ── Embedded MQTT broker ────────────────────────────────────────
 
 
-def _start_mqtt_broker(host: str = "0.0.0.0", port: int = 1883) -> None:
+def _start_mqtt_broker(host: str = "0.0.0.0", port: int = config.MQTT_PORT) -> None:
     """Run aMQTT broker in a daemon thread with its own event loop."""
 
     async def _serve() -> None:
@@ -53,7 +48,10 @@ def _start_mqtt_broker(host: str = "0.0.0.0", port: int = 1883) -> None:
 # ── Flask application ───────────────────────────────────────────
 
 
-def create_app(mqtt_host: str = "127.0.0.1", mqtt_port: int = 1883) -> Flask:
+def create_app(
+    mqtt_host: str = config.MQTT_HOST,
+    mqtt_port: int = config.MQTT_PORT,
+) -> Flask:
     app = Flask(__name__)
     CORS(app)
 
@@ -81,7 +79,7 @@ def create_app(mqtt_host: str = "127.0.0.1", mqtt_port: int = 1883) -> Flask:
         command = body.get("command", "noop")
         job_id = str(uuid.uuid4())
 
-        topic = f"vehicle/{vehicle_id}/commands"
+        topic = config.MQTT_TOPIC_TEMPLATE.format(vehicle_id=vehicle_id)
         payload = {
             "job_id": job_id,
             "vehicle_id": vehicle_id,
@@ -99,7 +97,7 @@ def create_app(mqtt_host: str = "127.0.0.1", mqtt_port: int = 1883) -> Flask:
                 client.loop_start()
                 time.sleep(0.2)
                 info = client.publish(topic, json.dumps(payload), qos=1)
-                info.wait_for_publish(timeout=5)
+                info.wait_for_publish(timeout=config.TIMEOUT)
                 client.loop_stop()
                 client.disconnect()
             except Exception as exc:
@@ -119,12 +117,12 @@ def main() -> None:
         level=logging.INFO,
         format="[%(asctime)s] %(levelname)s %(name)s — %(message)s",
     )
-    _start_mqtt_broker()
+    _start_mqtt_broker(port=config.MQTT_PORT)
     time.sleep(1)
 
     app = create_app()
-    logger.info("Unified Mock Server → http://127.0.0.1:8080")
-    app.run(host="127.0.0.1", port=8080, threaded=True)
+    logger.info("Unified Mock Server → %s", config.BASE_URL)
+    app.run(host=config.FLASK_HOST, port=config.FLASK_PORT, threaded=True)
 
 
 if __name__ == "__main__":
