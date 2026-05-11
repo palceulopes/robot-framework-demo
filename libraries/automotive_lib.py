@@ -61,13 +61,6 @@ class AutomotiveLib:
     def get_vehicle_status(self) -> Dict[str, Any]:
         return requests.get(f"{self.base_url}/api/vehicle/status").json()
 
-    def create_job(self, vehicle_id: str, command: str) -> Dict[str, Any]:
-        r = requests.post(
-            f"{self.base_url}/api/v1/jobs",
-            json={"vehicle_id": vehicle_id, "command": command},
-        )
-        return r.json()
-
     def server_should_be_healthy(self):
         r = requests.get(f"{self.base_url}/api/vehicle/status")
         assert r.status_code == 200
