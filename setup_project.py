@@ -55,7 +55,6 @@ def verify_project_structure():
         "libraries",
         "resources",
         "tests",
-        "variables",
     ]
     
     project_root = Path(__file__).parent
@@ -72,11 +71,10 @@ def verify_project_structure():
 def verify_files():
     """Verify critical files exist."""
     required_files = {
-        "libraries/automotive_lib.py": "Automotive library",
-        "resources/vehicle_service_keywords.resource": "Vehicle Service REST keywords",
-        "resources/mqtt_keywords.resource": "MQTT keywords (demo)",
-        "tests/network_stack.robot": "Demo test suite (REST + MQTT)",
-        "variables/config.py": "Configuration",
+        "config.py": "Centralized configuration",
+        "mock_server.py": "Unified mock server (Flask + MQTT)",
+        "libraries/automotive_lib.py": "Automotive library (REST + MQTT)",
+        "tests/network_stack.robot": "E2E demo suite",
     }
     
     project_root = Path(__file__).parent
@@ -103,9 +101,8 @@ def print_next_steps():
     print("\nNext steps (demo-ready):")
     print("1. Install demo dependencies:")
     print("   uv sync --extra automotive")
-    print("\n2. Run the demo suite (REST + MQTT) with metrics:")
-    print("   uv run robot --pythonpath . --listener libraries.automotive_listener tests/network_stack.robot")
-    print("\nBonus (CAN/DBC): tests are under tests/bonus/")
+    print("\n2. Run the E2E demo suite:")
+    print("   uv run robot --pythonpath . --outputdir results tests/network_stack.robot")
     print("\nFor more information, see README.md")
     print("="*60 + "\n")
 
